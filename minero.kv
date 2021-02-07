@@ -1,0 +1,308 @@
+<MineroWindow>:
+    Pantalla_de_inicio:
+    Pantalla_de_usuario:
+    Pantalla_de_dificultad:
+    Pantalla_de_juego:
+    Leaderboard:
+    Pantalla_victoria:
+    Pantalla_derrota:
+
+<Pantalla_de_inicio>:
+    id:pantalla_inicio
+    name:'sc_inicio'
+    FloatLayout:
+        Label:
+            pos_hint:{'center_x':.5,'center_y':.7}
+            size_hint:(.5,.3)
+            text:'BLIND MINER'
+            text_size: cm(6), cm(6)
+            font_size:50
+            bold:True
+            halign:'center'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.35}
+            size_hint:(.25,.1)
+            text:'START'
+            on_release: app.screen_manager.current='sc_user'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.2}
+            size_hint:(.25,.1)
+            text:'LEADERBOARD'
+            on_release: app.screen_manager.current='sc_ldb'
+
+
+<Pantalla_de_usuario>:
+    id:pantalla_usuario
+    name:'sc_user'
+    FloatLayout:
+        Label:
+            text:'Usuario:'
+            font_size:50
+            pos_hint:{'center_x':.35,'center_y':.5}
+            size_hint:(.3,.1)
+        TextInput:
+            pos_hint:{'center_x':.65,'center_y':.5}
+            size_hint:(.3,.1)
+            font_size:50
+            halign:'center'
+            valign:'middle'
+            multiline:False
+        Button:
+            pos_hint:{'center_x':.3,'center_y':.2}
+            size_hint:(.2,.1)
+            text:"Jugar"
+            on_release:app.screen_manager.current='sc_dif'
+        Button:
+            pos_hint:{'center_x':.7,'center_y':.2}
+            size_hint:(.2,.1)
+            text:"Cancelar"
+            on_release:app.screen_manager.current='sc_inicio'
+
+<Pantalla_de_dificultad>:
+    id:pantalla_dificultad
+    name:'sc_dif'
+    BoxLayout:
+        orientation:'vertical'
+        spacing:10
+        Label:
+            size_hint:(1,.2)
+            text:'Seleccione el nivel de dificultad'
+            font_size:40
+            bold:True
+            halign:'center'
+        Button:
+            size_hint:(.3,.15)
+            pos_hint:{'x':.35}
+            font_size:40
+            text:'Fácil'
+            on_release:
+                app.screen_manager.current='sc_game'
+                root.dificultad='f'
+        Button:
+            size_hint:(.3,.15)
+            pos_hint:{'x':.35}
+            font_size:40
+            text:'Intermedio'
+            on_release:
+                app.screen_manager.current='sc_game'
+                root.dificultad='i'
+        Button:
+            size_hint:(.3,.15)
+            pos_hint:{'x':.35}
+            font_size:40
+            text:'Difícil'
+            on_release:
+                app.screen_manager.current='sc_game'
+                root.dificultad='d'
+        Label:
+            size_hint:(.3,.15)
+        Button:
+            size_hint:(.2,.1)
+            pos_hint:{'x':.4}
+            text:'Volver'
+            on_release:app.screen_manager.current='sc_inicio'
+        Label:
+            size_hint:(.3,.1)
+
+<Pantalla_de_juego>:
+    id:pantalla_juego
+    name:'sc_game'
+    Flotante_de_juego:
+        id:float_juego
+
+
+<Flotante_de_juego>:
+    canvas.before:
+        Rectangle:
+            source: 'suelo.png'
+            pos:(0,200)
+            size: (800,600)
+        Color:
+            rgba:[1,1,1,1]
+        Rectangle:
+            id:'pj'
+            source:'pico.png'
+            size:(30,30)
+            pos:self.coordenada_pj
+        Rectangle:
+            pos:(0,0)
+            size: (800,200)
+
+    FloatLayout:
+        id:layout_diamantes
+    FloatLayout:
+        id:layout_bombas
+    # Botones de movimiento 
+    Button:
+        size_hint:(.1,.05)
+        pos_hint:{'center_x':.6,'center_y':.1}
+        text:u'Derecha'
+        on_release:root.mover_pj(40,0)
+    Button:
+        size_hint:(.1,.05)
+        pos_hint:{'center_x':.4,'center_y':.1}
+        text:'Izquierda'
+        on_release:root.mover_pj(-40,0)
+    Button:
+        size_hint:(.1,.05)
+        pos_hint:{'center_x':.5,'center_y':.1}
+        text:'Abajo'
+        on_release:root.mover_pj(0,-30)
+    Button:
+        size_hint:(.1,.05)
+        pos_hint:{'center_x':.5,'center_y':.15}
+        text:'Arriba'
+        on_release:root.mover_pj(0,30)
+
+    # Numero de diamantes en la interfaz
+    Diamante:
+        pos_hint:{'center_x':.1,'center_y':.2}
+
+    Label:
+        pos_hint:{'center_x':.125,'center_y':.2}
+        text:'X'
+        color:[0,0,0,1]
+        bold:True
+    Label:
+        pos_hint:{'center_x':.145,'center_y':.2}
+        text:str(root.num_diam)
+        color:[0,0,0,1]
+        bold:True
+
+    # Numero de vidas en la interfaz
+    Vida:
+        pos_hint:{'center_x':.1,'center_y':.15}
+
+    Label:
+        pos_hint:{'center_x':.125,'center_y':.15}
+        text:'X'
+        color:[0,0,0,1]
+        bold:True
+    Label:
+        pos_hint:{'center_x':.145,'center_y':.15}
+        text:str(root.vidas)
+        color:[0,0,0,1]
+        bold:True
+
+    # Boton que empieza el juego
+    Button:
+        size_hint:(.1,.05)
+        pos_hint:{'center_x':.2,'center_y':.1}
+        text:'Empezar'
+        on_release:root.Empezar_juego()
+
+    Button:
+        size_hint:(.15,.05)
+        pos_hint:{'center_x':.8,'center_y':.1}
+        text:'Pantalla Inicio'
+        on_release:
+            app.screen_manager.current='sc_inicio'
+            root.evento.cancel()
+            root.reinicializar_valores()
+    
+<Diamante>:
+    source:"diamante.png"
+    size_hint: None, None
+    size:30,30
+<Bomba>:
+    source:'bomba.png'
+    size_hint:None,None
+    size:30,30
+
+<Explosion>:
+    source:'explosion.png'
+    size_hint:None,None
+    size:30,30
+<Vida>:
+    source:"vida.png"
+    size_hint: None, None
+    size:30,30
+
+<Blanco>:
+    source:"fondo.png"
+    size_hint: None, None
+    size:30,30
+
+<Pantalla_victoria>:
+    id:pantalla_victoria
+    name:'sc_victoria'
+    FloatLayout:
+        Image:
+            pos_hint:{'center_x':.5,'center_y':.7}
+            source:'victoria.jpg'
+            size:200,100
+        Label:
+            pos_hint:{'center_x':.5,'center_y':.4}
+            size_hint:(.5,.2)
+            text:'¿Qué deseas hacer?'
+            font_size:50
+            bold:True
+            halign:'center'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.2}
+            size_hint:(.25,.1)
+            text:'Jugar de nuevo'
+            on_release: app.screen_manager.current='sc_inicio'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.1}
+            size_hint:(.25,.1)
+            text:'LEADERBOARD'
+            on_release: app.screen_manager.current='sc_ldb'
+
+<Pantalla_derrota>:
+    id:pantalla_derrota
+    name:'sc_derrota'
+    FloatLayout:
+        Image:
+            pos_hint:{'center_x':.5,'center_y':.7}
+            source:'derrota.jpg'
+        Label:
+            pos_hint:{'center_x':.5,'center_y':.4}
+            size_hint:(.5,.2)
+            text:'¿Qué deseas hacer?'
+            font_size:50
+            bold:True
+            halign:'center'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.2}
+            size_hint:(.25,.1)
+            text:'Jugar de nuevo'
+            on_release: app.screen_manager.current='sc_inicio'
+        Button:
+            pos_hint:{'center_x':.5,'center_y':.1}
+            size_hint:(.25,.1)
+            text:'LEADERBOARD'
+            on_release: app.screen_manager.current='sc_ldb'
+
+<Leaderboard>:
+    name:'sc_ldb'
+    FloatLayout:
+        Button:
+            size_hint:(.15,.05)
+            pos_hint:{'center_x':.5,'center_y':.1}
+            text:'Pantalla Inicio'
+            on_release:
+                app.screen_manager.current='sc_inicio'
+        Label:
+            text:'Jugador'
+            size_hint_y:None
+            pos_hint:{'center_x':.25,'center_y':.9}
+            font_size:18
+            height: 50
+        Label:
+            text:'Puntaje'
+            size_hint_y:None
+            pos_hint:{'center_x':.75,'center_y':.9}
+            font_size:18
+            height: 50
+        ScrollView:
+            Contenedor:
+                id:contenedor
+
+<Contenedor@BoxLayout>:
+    manager:None
+    id: contenedor
+    size_hint_y:None
+    orientation:'vertical'
+    height: self.minimum_height
+
